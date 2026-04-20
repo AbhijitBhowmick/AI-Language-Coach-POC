@@ -1,0 +1,12 @@
+docs/architecture_hld.md
+docs/oauth2-design.md
+docs/native-aot.md
+docs/setup.md
+docs/architecture_lld.md
+docs/deployment.md
+docs/changes.md
+docs/test.md
+docs/authentik-integration.md
+src/main/resources/static/register.html
+src/main/resources/static/login.html
+src/main/resources/prompts/linguistic_bridge_template.txt

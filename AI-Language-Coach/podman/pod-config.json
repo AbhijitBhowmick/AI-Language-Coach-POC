@@ -1,0 +1,31 @@
+{
+  "podName": "ai-language-coach",
+  " containers": [
+    {
+      "name": "valkey",
+      "image": "valkey/valkey:8.0-alpine",
+      "annotations": {
+        "io.kubernetes.pod.name": "ai-language-coach"
+      }
+    },
+    {
+      "name": "qdrant", 
+      "image": "qdrant/qdrant:latest",
+      "annotations": {
+        "io.kubernetes.pod.name": "ai-language-coach"
+      }
+    },
+    {
+      "name": "postgres",
+      "image": "postgres:16-alpine",
+      "annotations": {
+        "io.kubernetes.pod.name": "ai-language-coach"
+      }
+    }
+  ],
+  "arm64": true,
+  "resources": {
+    "memory": "24G",
+    "cpu": 4
+  }
+}

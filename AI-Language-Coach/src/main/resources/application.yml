@@ -1,0 +1,76 @@
+spring:
+  application:
+    name: ai-language-platform
+
+  datasource:
+    url: jdbc:postgresql://${platform.host.db:192.168.0.18}:${platform.host.db-port:5432}/${platform.host.db-name:language_coach}
+    username: ${platform.host.db-user:infra_admin}
+    password: ${platform.host.db-password:Test@1234}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  data:
+    redis:
+      host: ${platform.host.valkey:localhost}
+      port: ${platform.host.valkey-port:6379}
+
+platform:
+  enabled: true
+  mode: ${PLATFORM_MODE:coach}
+  infrastructure: ${INFRASTRUCTURE:local}
+
+  host:
+    valkey: ${VALKEY_HOST:192.168.0.18}
+    valkey-port: ${VALKEY_PORT:6379}
+    db: ${DB_HOST:192.168.0.18}
+    db-port: ${DB_PORT:5432}
+    db-name: ${DB_NAME:language_coach}
+    db-user: ${DB_USER:infra_admin}
+    db-password: ${DB_PASS:Test@1234}
+
+  tenant:
+    id: ${TENANT_ID:1}
+    name: ${TENANT_NAME:language-coach}
+    allowed-ids: ${ALLOWED_TENANT_IDS:1,2}
+
+jwt:
+  secret: ${JWT_SECRET:a-very-long-and-secure-random-secret-key-that-is-at-least-32-characters-long}
+  expiration: ${JWT_EXPIRATION:86400000}
+
+langchain4j:
+  google-ai-gemini:
+    api-key: ${apikey:123}
+
+server:
+  port: ${APP_PORT:8080}
+  servlet:
+    context-path: /api/v1
+
+# Phase 1: Local form login (active)
+# Phase 2: Uncomment oauth2 section below to enable Keycloak/OIDC
+
+# security:
+#   oauth2:
+#     client:
+#       registration:
+#         keycloak:
+#           client-id: ${KEYCLOAK_CLIENT_ID:}
+#           client-secret: ${KEYCLOAK_CLIENT_SECRET:}
+#           scope: openid,email,profile
+#           authorization-grant-type: authorization_code
+#           redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
+#       provider:
+#         keycloak:
+#           issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/language-coach}
+#     resourceserver:
+#       jwt:
+#         issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/language-coach}
+#         jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8080/realms/language-coach/protocol/openid-connect/certs}
