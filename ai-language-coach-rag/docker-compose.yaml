@@ -1,0 +1,90 @@
+name: ai-language-coach-phase2
+
+services:
+  # Phase 2A: Python RAG Engine
+  ai-universal-rag-engine:
+    build:
+      context: ./ai-universal-rag-engine
+      dockerfile: Dockerfile
+    container_name: ai-rag-engine
+    ports:
+      - "8000:8000"
+    environment:
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - VALKEY_HOST=valkey
+      - VALKEY_PORT=6379
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - USE_MOCK=${USE_MOCK:-false}
+    depends_on:
+      - qdrant
+      - valkey
+    networks:
+      - ai-language-coach
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Phase 2B: Next.js Frontend
+  ai-language-coach-frontend:
+    build:
+      context: ./ai-language-coach-frontend
+      dockerfile: Dockerfile
+    container_name: ai-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_JAVA_API_URL=${JAVA_API_URL:-http://localhost:8080/api/v1}
+      - NEXT_PUBLIC_RAG_API_URL=${RAG_API_URL:-http://localhost:8000}
+    depends_on:
+      - ai-universal-rag-engine
+    networks:
+      - ai-language-coach
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Infrastructure (shared with Phase 1)
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: ai-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - ai-language-coach
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  valkey:
+    image: valkey/valkey:latest
+    container_name: ai-valkey
+    ports:
+      - "6379:6379"
+    volumes:
+      - valkey_data:/data
+    networks:
+      - ai-language-coach
+    command: valkey-server --maxmemory 512mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  ai-language-coach:
+    driver: bridge
+
+volumes:
+  qdrant_data:
+  valkey_data:

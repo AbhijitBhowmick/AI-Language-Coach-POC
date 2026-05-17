@@ -1,0 +1,63 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "voice-service",
+        "description": "AI Language Coach - REST API documentation",
+        "contact": {
+            "name": "AI Language Coach Team",
+            "email": "support@language-coach.com"
+        },
+        "license": {
+            "name": "Proprietary",
+            "url": "https://language-coach.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8084",
+            "description": "Generated server url"
+        }
+    ],
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
+    "paths": {
+        "/api/v1/voice/health": {
+            "get": {
+                "tags": [
+                    "voice-health-controller"
+                ],
+                "operationId": "health",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "JWT token obtained from POST /auth/login or POST /auth/register",
+                "name": "bearerAuth",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}

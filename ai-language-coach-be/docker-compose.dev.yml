@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # PostgreSQL (Database)
+  postgres:
+    image: postgres:16-alpine
+    container_name: language-coach-db
+    environment:
+      POSTGRES_DB: language_coach
+      POSTGRES_USER: infra_admin
+      POSTGRES_PASSWORD: Test@1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U infra_admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Valkey (Cache/Session)
+  valkey:
+    image: valkey/valkey:latest
+    container_name: language-coach-cache
+    command: valkey-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - valkey_data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  valkey_data:

@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Diagnostic Service API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/diagnostic/start": {
+      "post": {
+        "summary": "Start Diagnostic Test",
+        "responses": { "200": { "description": "Test Started" } }
+      }
+    },
+    "/diagnostic/question": {
+      "get": {
+        "summary": "Get Current Question",
+        "responses": { "200": { "description": "Question" } }
+      }
+    },
+    "/diagnostic/answer": {
+      "post": {
+        "summary": "Submit Answer",
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Answer submitted" } }
+      }
+    },
+    "/diagnostic/result": {
+      "get": {
+        "summary": "Get Test Result",
+        "responses": { "200": { "description": "Result" } }
+      }
+    },
+    "/api/v1/diagnostic/game/start": {
+      "post": {
+        "summary": "Start Game",
+        "responses": { "200": { "description": "Game started" } }
+      }
+    },
+    "/api/v1/diagnostic/game/{sessionId}/question": {
+      "get": {
+        "summary": "Get Game Question",
+        "parameters": [ { "name": "sessionId", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Game question" } }
+      }
+    },
+    "/api/v1/diagnostic/game/{sessionId}/answer": {
+      "post": {
+        "summary": "Submit Game Answer",
+        "parameters": [ { "name": "sessionId", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Answer submitted" } }
+      }
+    },
+    "/api/v1/diagnostic/game/templates": {
+      "get": {
+        "summary": "Get Game Templates",
+        "responses": { "200": { "description": "Templates" } }
+      }
+    },
+    "/api/v1/diagnostic/game/templates/{category}": {
+      "get": {
+        "summary": "Get Game Templates By Category",
+        "parameters": [ { "name": "category", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Templates" } }
+      }
+    }
+  }
+}

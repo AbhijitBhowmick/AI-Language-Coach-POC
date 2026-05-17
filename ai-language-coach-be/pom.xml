@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.4.0</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.platform</groupId>
+    <artifactId>ai-language-platform</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>AI Language Platform</name>
+    <description>Voice-first Czech A1/A2 Language Coach - Native AOT for 1M+ users</description>
+
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <langchain4j.version>1.2.0</langchain4j.version>
+        <native.maven.plugin.version>0.10.2</native.maven.plugin.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+    </dependencies>
+
+    <modules>
+        <module>modules/common-services</module>
+        <module>modules/auth-service</module>
+        <module>modules/profile-service</module>
+        <module>modules/diagnostic-service</module>
+        <module>modules/voice-service</module>
+        <module>modules/community-service</module>
+    </modules>
+
+    <profiles>
+        <profile>
+            <id>native</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>${native.maven.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>build-native</id>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <mainClass>com.platform.auth.AuthApplication</mainClass>
+                            <imageName>ai-language-platform</imageName>
+                            <buildArguments>
+                                <buildArg>--no-fallback</buildArg>
+                                <buildArg>-O3</buildArg>
+                                <buildArg>--verbose</buildArg>
+                            </buildArguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Standalone service profiles (run individual modules) -->
+        <profile>
+            <id>auth-service</id>
+            <modules>
+                <module>modules/common-services</module>
+                <module>modules/auth-service</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>profile-service</id>
+            <modules>
+                <module>modules/common-services</module>
+                <module>modules/profile-service</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>diagnostic-service</id>
+            <modules>
+                <module>modules/common-services</module>
+                <module>modules/diagnostic-service</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>voice-service</id>
+            <modules>
+                <module>modules/common-services</module>
+                <module>modules/voice-service</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>community-service</id>
+            <modules>
+                <module>modules/common-services</module>
+                <module>modules/community-service</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>run-all</id>
+            <properties>
+                <db.host>localhost</db.host>
+                <db.port>5432</db.port>
+                <db.name>language_coach</db.name>
+                <db.user>infra_admin</db.user>
+                <db.pass>Test@1234</db.pass>
+                <valkey.host>localhost</valkey.host>
+                <valkey.port>6379</valkey.port>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.5.0</version>
+                        <configuration>
+                            <executable>bash</executable>
+                            <workingDirectory>${session.executionRootDirectory}</workingDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start-all-services</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>
+                                        <argument>${session.executionRootDirectory}/start-services.sh</argument>
+                                        <argument>${db.host}</argument>
+                                        <argument>${db.port}</argument>
+                                        <argument>${valkey.host}</argument>
+                                        <argument>${valkey.port}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

@@ -1,0 +1,126 @@
+server:
+  port: ${APP_PORT:8084}
+
+# CORS Configuration
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://127.0.0.1:3000}
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  show-actuator: false
+  paths-to-match: /api/v1/**
+  cache:
+    disabled: true
+
+spring:
+  application:
+    name: voice-service
+
+  data:
+    redis:
+      host: ${VALKEY_HOST:localhost}
+      port: ${VALKEY_PORT:6379}
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 5
+          min-idle: 2
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}
+
+voice:
+  stt:
+    provider: ${STT_PROVIDER:gemini}
+  tts:
+    provider: ${TTS_PROVIDER:gemini}
+  whisper:
+    api-url: ${WHISPER_API_URL:http://localhost:8001/v1}
+    model: ${WHISPER_MODEL:base}
+    timeout-seconds: 30
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+    model: ${GEMINI_MODEL:gemini-2.0-flash-exp}
+    stt-model: ${GEMINI_STT_MODEL:gemini-2.0-flash-exp}
+    tts-model: ${GEMINI_TTS_MODEL:gemini-2.0-flash-exp}
+  claude:
+    api-key: ${CLAUDE_API_KEY:}
+    model: ${CLAUDE_MODEL:claude-3-opus-20240229}
+  openai:
+    api-key: ${OPENAI_API_KEY:}
+    model: ${OPENAI_MODEL:gpt-4-turbo}
+    stt-model: ${OPENAI_STT_MODEL:whisper-1}
+    tts-model: ${OPENAI_TTS_MODEL:tts-1}
+  conversation:
+    ttl-minutes: 10
+    prefix: "conversation:"
+  profile-service:
+    base-url: ${PROFILE_SERVICE_URL:http://localhost:8082}
+    timeout-seconds: 5
+
+# RAG Service Configuration
+rag:
+  base-url: ${RAG_BASE_URL:http://localhost:8000}
+  api-path: /ai/v1/query
+  timeout-seconds: 30
+
+  # Storage Configuration
+  storage:
+    base-path: ${VOICE_STORAGE_PATH:/data/recordings}
+    transcription:
+      enabled: true
+      anonymize: true
+    retention:
+      free: 0
+      standard: 30
+      premium: 90
+
+  # Analytics Configuration
+  analytics:
+    enabled: true
+    free-tier-analytics-type: none
+    standard-tier-analytics-type: rule-based
+    premium-tier-analytics-type: llm-powered
+    llm-model: ${GEMINI_ANALYTICS_MODEL:gemini-2.0-flash-exp}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      gemini-stt:
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 80
+        slow-call-duration-threshold: 5s
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+  timelimiter:
+    instances:
+      gemini-stt:
+        timeout-duration: 30s
+
+logging:
+  level:
+    com.platform.voice: DEBUG
+    org.springframework.web.socket: INFO

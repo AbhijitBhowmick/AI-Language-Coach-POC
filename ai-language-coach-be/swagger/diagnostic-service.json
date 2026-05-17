@@ -1,0 +1,1147 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Diagnostic Service API",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8083",
+            "description": "Generated server url"
+        }
+    ],
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
+    "paths": {
+        "/diagnostic/start": {
+            "post": {
+                "tags": [
+                    "diagnostic-controller"
+                ],
+                "operationId": "startTest",
+                "parameters": [
+                    {
+                        "name": "targetLanguage",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "targetLevel",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DiagnosticTest"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/diagnostic/answer": {
+            "post": {
+                "tags": [
+                    "diagnostic-controller"
+                ],
+                "operationId": "submitAnswer",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AnswerSubmission"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DiagnosticTest"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/diagnostic/game/{sessionId}/answer": {
+            "post": {
+                "tags": [
+                    "game-controller"
+                ],
+                "operationId": "submitAnswer_1",
+                "parameters": [
+                    {
+                        "name": "sessionId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/GameAnswer"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GameResult"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/diagnostic/game/start": {
+            "post": {
+                "tags": [
+                    "game-controller"
+                ],
+                "operationId": "startGame",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "templateId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "targetLanguage",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "targetLevel",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "A1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GameSession"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/diagnostic/result": {
+            "get": {
+                "tags": [
+                    "diagnostic-controller"
+                ],
+                "operationId": "getResult",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TestResult"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/diagnostic/question": {
+            "get": {
+                "tags": [
+                    "diagnostic-controller"
+                ],
+                "operationId": "getCurrentQuestion",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DiagnosticQuestion"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/diagnostic/game/{sessionId}/question": {
+            "get": {
+                "tags": [
+                    "game-controller"
+                ],
+                "operationId": "getCurrentQuestion_1",
+                "parameters": [
+                    {
+                        "name": "sessionId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GameRenderData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/diagnostic/game/templates": {
+            "get": {
+                "tags": [
+                    "game-controller"
+                ],
+                "operationId": "getTemplates",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/GameTemplateEntity"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/diagnostic/game/templates/{category}": {
+            "get": {
+                "tags": [
+                    "game-controller"
+                ],
+                "operationId": "getTemplatesByCategory",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/GameTemplateEntity"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "DiagnosticQuestion": {
+                "type": "object",
+                "properties": {
+                    "questionNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "LISTENING_FILL_BLANK",
+                            "VISUAL_MULTIPLE_CHOICE",
+                            "GRAMMAR_COMPLETION",
+                            "DIALOGUE_COMPLETION"
+                        ]
+                    },
+                    "targetLanguage": {
+                        "type": "string"
+                    },
+                    "targetLevel": {
+                        "type": "string"
+                    },
+                    "nativeLanguage": {
+                        "type": "string"
+                    },
+                    "questionText": {
+                        "type": "string"
+                    },
+                    "audioUrl": {
+                        "type": "string"
+                    },
+                    "imageUrl": {
+                        "type": "string"
+                    },
+                    "situation": {
+                        "type": "string"
+                    },
+                    "options": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "correctAnswer": {
+                        "type": "string"
+                    },
+                    "explanation": {
+                        "type": "string"
+                    },
+                    "level": {
+                        "type": "string"
+                    },
+                    "linguisticBridges": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "DiagnosticTest": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "targetLanguage": {
+                        "type": "string"
+                    },
+                    "targetLevel": {
+                        "type": "string"
+                    },
+                    "nativeLanguage": {
+                        "type": "string"
+                    },
+                    "questions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DiagnosticQuestion"
+                        }
+                    },
+                    "currentQuestionIndex": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "correctAnswers": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "completed": {
+                        "type": "boolean"
+                    },
+                    "startedAt": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "completedAt": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "AnswerSubmission": {
+                "type": "object",
+                "properties": {
+                    "questionNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "answer": {
+                        "type": "string"
+                    }
+                }
+            },
+            "GameAnswer": {
+                "type": "object",
+                "properties": {
+                    "sessionId": {
+                        "type": "string"
+                    },
+                    "questionIndex": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "answer": {
+                        "type": "string"
+                    },
+                    "selectedItems": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "matchedPairs": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "branchChoice": {
+                        "type": "string"
+                    },
+                    "filledGaps": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "sortedCategories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "responseTimeMs": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "timeout": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "GameEndData": {
+                "type": "object",
+                "properties": {
+                    "totalQuestions": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "correctAnswers": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalScore": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "bestStreak": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalTimeMs": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "performanceRating": {
+                        "type": "string"
+                    },
+                    "recommendedLevel": {
+                        "type": "string"
+                    }
+                }
+            },
+            "GameResult": {
+                "type": "object",
+                "properties": {
+                    "correct": {
+                        "type": "boolean"
+                    },
+                    "pointsEarned": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalScore": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "streakCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "livesRemaining": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "correctAnswer": {
+                        "type": "string"
+                    },
+                    "explanation": {
+                        "type": "string"
+                    },
+                    "linguisticBridge": {
+                        "type": "string"
+                    },
+                    "responseTimeMs": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "timeout": {
+                        "type": "boolean"
+                    },
+                    "nextQuestionId": {
+                        "type": "string"
+                    },
+                    "isCompleted": {
+                        "type": "boolean"
+                    },
+                    "endData": {
+                        "$ref": "#/components/schemas/GameEndData"
+                    }
+                }
+            },
+            "BranchData": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "nextQuestionId": {
+                        "type": "string"
+                    },
+                    "pointsReward": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "leadsToSuccess": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "BranchOption": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "nextQuestionId": {
+                        "type": "string"
+                    },
+                    "pointsReward": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "isCorrect": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "CategoryData": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CategoryItem"
+                        }
+                    }
+                }
+            },
+            "CategoryItem": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "imageUrl": {
+                        "type": "string"
+                    },
+                    "assignedCategory": {
+                        "type": "string"
+                    }
+                }
+            },
+            "GameQuestion": {
+                "type": "object",
+                "properties": {
+                    "questionNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "templateId": {
+                        "type": "string"
+                    },
+                    "targetLanguage": {
+                        "type": "string"
+                    },
+                    "targetLevel": {
+                        "type": "string"
+                    },
+                    "questionText": {
+                        "type": "string"
+                    },
+                    "mediaUrl": {
+                        "type": "string"
+                    },
+                    "mediaType": {
+                        "type": "string"
+                    },
+                    "situation": {
+                        "type": "string"
+                    },
+                    "options": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "correctAnswers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "gapPositions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GapPosition"
+                        }
+                    },
+                    "matchPairs": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MatchPair"
+                        }
+                    },
+                    "branchOptions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BranchOption"
+                        }
+                    },
+                    "categoryItems": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CategoryItem"
+                        }
+                    },
+                    "correctAnswer": {
+                        "type": "string"
+                    },
+                    "explanation": {
+                        "type": "string"
+                    },
+                    "linguisticBridge": {
+                        "type": "string"
+                    },
+                    "timeLimitSeconds": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pointsValue": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "difficultyWeight": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "skillArea": {
+                        "type": "string"
+                    }
+                }
+            },
+            "GameRenderData": {
+                "type": "object",
+                "properties": {
+                    "templateId": {
+                        "type": "string"
+                    },
+                    "displayName": {
+                        "type": "string"
+                    },
+                    "questionNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalQuestions": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "instructionText": {
+                        "type": "string"
+                    },
+                    "mediaUrl": {
+                        "type": "string"
+                    },
+                    "mediaType": {
+                        "type": "string"
+                    },
+                    "questionText": {
+                        "type": "string"
+                    },
+                    "options": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OptionData"
+                        }
+                    },
+                    "answerSlots": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "scrambledWords": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "targetItems": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TargetItem"
+                        }
+                    },
+                    "branches": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BranchData"
+                        }
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CategoryData"
+                        }
+                    },
+                    "sortItems": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SortItem"
+                        }
+                    },
+                    "timeLimitSeconds": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pointsValue": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "livesRemaining": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "currentScore": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "streakCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "additionalData": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "GameSession": {
+                "type": "object",
+                "properties": {
+                    "sessionId": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "$ref": "#/components/schemas/GameState"
+                    },
+                    "questions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GameQuestion"
+                        }
+                    },
+                    "initialRender": {
+                        "$ref": "#/components/schemas/GameRenderData"
+                    }
+                }
+            },
+            "GameState": {
+                "type": "object",
+                "properties": {
+                    "sessionId": {
+                        "type": "string"
+                    },
+                    "userId": {
+                        "type": "string"
+                    },
+                    "templateId": {
+                        "type": "string"
+                    },
+                    "currentQuestionIndex": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalQuestions": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "score": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "streakCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "livesRemaining": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "correctAnswers": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "startTimeMs": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "questionStartTimeMs": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "attempts": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/QuestionAttempt"
+                        }
+                    },
+                    "gameData": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object"
+                        }
+                    },
+                    "isCompleted": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "GapPosition": {
+                "type": "object",
+                "properties": {
+                    "position": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "length": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "acceptableAnswers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "MatchPair": {
+                "type": "object",
+                "properties": {
+                    "left": {
+                        "type": "string"
+                    },
+                    "right": {
+                        "type": "string"
+                    },
+                    "imageUrl": {
+                        "type": "string"
+                    }
+                }
+            },
+            "OptionData": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "imageUrl": {
+                        "type": "string"
+                    },
+                    "isCorrect": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "QuestionAttempt": {
+                "type": "object",
+                "properties": {
+                    "questionIndex": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "correct": {
+                        "type": "boolean"
+                    },
+                    "pointsEarned": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "responseTimeMs": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "SortItem": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "correctCategory": {
+                        "type": "string"
+                    }
+                }
+            },
+            "TargetItem": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "imageUrl": {
+                        "type": "string"
+                    },
+                    "isTarget": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "QuestionFeedback": {
+                "type": "object",
+                "properties": {
+                    "questionNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "correct": {
+                        "type": "boolean"
+                    },
+                    "correctAnswer": {
+                        "type": "string"
+                    },
+                    "explanation": {
+                        "type": "string"
+                    }
+                }
+            },
+            "TestResult": {
+                "type": "object",
+                "properties": {
+                    "targetLanguage": {
+                        "type": "string"
+                    },
+                    "targetLevel": {
+                        "type": "string"
+                    },
+                    "totalQuestions": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "correctAnswers": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "scorePercentage": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "recommendedLevel": {
+                        "type": "string"
+                    },
+                    "feedback": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/QuestionFeedback"
+                        }
+                    }
+                }
+            },
+            "GameTemplateEntity": {
+                "type": "object",
+                "properties": {
+                    "templateId": {
+                        "type": "string"
+                    },
+                    "displayName": {
+                        "type": "string"
+                    },
+                    "templateCategory": {
+                        "type": "string"
+                    },
+                    "displayOrder": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "iconClass": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "defaultTimeSeconds": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pointsPerCorrect": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "penaltyPoints": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "livesEnabled": {
+                        "type": "boolean"
+                    },
+                    "branchingEnabled": {
+                        "type": "boolean"
+                    },
+                    "minQuestions": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "maxQuestions": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "configSchema": {
+                        "type": "string"
+                    },
+                    "difficultyWeights": {
+                        "type": "string"
+                    },
+                    "skillAreas": {
+                        "type": "string"
+                    },
+                    "active": {
+                        "type": "boolean"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}

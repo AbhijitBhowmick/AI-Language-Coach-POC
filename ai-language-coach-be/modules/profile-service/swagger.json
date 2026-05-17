@@ -1,0 +1,29 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Profile Service API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/profile": {
+      "post": {
+        "summary": "Create Profile",
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Created" } }
+      },
+      "get": {
+        "summary": "Get Profile",
+        "responses": { "200": { "description": "Profile details" } }
+      },
+      "put": {
+        "summary": "Update Profile",
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete Profile",
+        "responses": { "204": { "description": "Deleted" } }
+      }
+    }
+  }
+}

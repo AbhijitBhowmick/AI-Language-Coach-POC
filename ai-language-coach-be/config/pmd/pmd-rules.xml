@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ruleset name="AI Language Coach PMD Rules"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>PMD rules for AI Language Coach project</description>
+
+    <!-- Categories -->
+    <category name="Best Practices"/>
+    <category name="Code Style"/>
+    <category name="Design"/>
+    <category name="Error Prone"/>
+    <category name="Performance"/>
+
+    <!-- Disabled Rules (too strict for POC) -->
+    <rule ref="rulesets/java/quickstart.xml/DefaultPackage">
+        <priority>3</priority>
+    </rule>
+
+    <!-- Important Rules -->
+    <rule ref="rulesets/java/quickstart.xml/EmptyIfStmt">
+        <priority>3</priority>
+    </rule>
+    <rule ref="rulesets/java/quickstart.xml/EmptyWhileStmt">
+        <priority>3</priority>
+    </rule>
+    <rule ref="rulesets/java/quickstart.xml/EmptyTryBlock">
+        <priority>3</priority>
+    </rule>
+    <rule ref="rulesets/java/quickstart.xml/EmptyCatchBlock">
+        <priority>3</priority>
+    </rule>
+    <rule ref="rulesets/java/quickstart.xml/EmptySwitchStatement">
+        <priority>3</priority>
+    </rule>
+
+    <!-- Design Rules -->
+    <rule ref="rulesets/java/quickstart.xml/SimplifyBooleanReturns">
+        <priority>5</priority>
+    </rule>
+
+    <!-- Performance -->
+    <rule ref="rulesets/java/quickstart.xml/ConsecutiveLiteralAppends">
+        <priority>3</priority>
+    </rule>
+    <rule ref="rulesets/java/quickstart.xml/UseStringBufferForStringAppends">
+        <priority>4</priority>
+    </rule>
+
+</ruleset>

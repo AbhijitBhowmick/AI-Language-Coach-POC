@@ -1,0 +1,21 @@
+-- Seed default game templates
+INSERT INTO game_templates (template_id, display_name, template_category, display_order, icon_class, description, 
+    default_time_seconds, points_per_correct, penalty_points, lives_enabled, branching_enabled, 
+    min_questions, max_questions, skill_areas) VALUES
+('standard', 'Quiz', 'GRAMMAR', 1, 'fa-question-circle', 'Multiple choice questions',
+    30, 10, 0, FALSE, FALSE, 5, 20, '["reading","writing"]'),
+('match_up', 'Match Up', 'VOCAB', 2, 'fa-puzzle-piece', 'Drag and drop matching pairs',
+    60, 15, -5, FALSE, FALSE, 6, 16, '["reading","vocabulary"]'),
+('cloze_text', 'Fill in the Blank', 'GRAMMAR', 3, 'fa-pen-fancy', 'Gap-fill text completion',
+    45, 12, -3, FALSE, FALSE, 3, 15, '["reading","writing"]'),
+('anagram', 'Anagram', 'VOCAB', 4, 'fa-font', 'Unscramble the word or phrase',
+    30, 15, -5, TRUE, FALSE, 5, 15, '["spelling"]'),
+('whack_mole', 'Whack-a-Mole', 'VOCAB', 5, 'fa-bug', 'Hit the correct answer fast',
+    20, 20, -10, TRUE, FALSE, 10, 20, '["listening","recognition"]'),
+('speaking_card', 'Speaking Card', 'SPEAKING', 6, 'fa-microphone', 'Record your spoken response',
+    90, 25, 0, FALSE, FALSE, 1, 10, '["speaking"]'),
+('situational_branching', 'Scenario', 'LISTENING', 7, 'fa-users', 'Branching conversation scenario',
+    120, 30, 0, FALSE, TRUE, 3, 10, '["listening","speaking"]'),
+('group_sort', 'Group Sort', 'GRAMMAR', 8, 'fa-layer-group', 'Drag items to correct categories',
+    60, 15, -5, FALSE, FALSE, 6, 15, '["grammar","vocabulary"]')
+ON CONFLICT (template_id) DO NOTHING;

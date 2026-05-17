@@ -1,0 +1,33 @@
+# Environment files (contain secrets)
+.env*
+!.env.example
+
+# Documentation
+docs/
+
+# Password/secret patterns
+*password*
+*secret*
+
+# Compiled files
+*.class
+*.jar
+*.war
+
+# Build
+target/
+build/
+*.log
+
+# IDE & OS
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Maven
+*.xml.saved
+*.iml

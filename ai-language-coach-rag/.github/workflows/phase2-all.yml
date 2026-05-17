@@ -1,0 +1,20 @@
+# Combined workflow to trigger both Phase 2 services together
+# Use this for coordinated deployments
+
+name: "CI/CD: Phase 2 - All Services"
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # Trigger both workflows
+  trigger-phase2a-rag:
+    uses: ./.github/workflows/phase2-rag.yml
+    secrets: inherit
+
+  trigger-phase2b-frontend:
+    uses: ./.github/workflows/phase2-frontend.yml
+    secrets: inherit

@@ -1,0 +1,87 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Auth Service API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register user",
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "201": { "description": "User registered" } }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login user",
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "User logged in" } }
+      }
+    },
+    "/auth/oauth2/success": {
+      "get": {
+        "summary": "OAuth2 Success",
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/auth/validate": {
+      "get": {
+        "summary": "Validate Token",
+        "responses": { "200": { "description": "Valid token" } }
+      }
+    },
+    "/auth/users": {
+      "post": {
+        "summary": "Create user by admin",
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "201": { "description": "User created" } }
+      },
+      "get": {
+        "summary": "Get all users",
+        "responses": { "200": { "description": "List of users" } }
+      }
+    },
+    "/auth/users/pending": {
+      "get": {
+        "summary": "Get pending approvals",
+        "responses": { "200": { "description": "List of pending users" } }
+      }
+    },
+    "/auth/users/{userId}/approve": {
+      "post": {
+        "summary": "Approve user",
+        "parameters": [ { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Approved" } }
+      }
+    },
+    "/auth/users/{userId}/reject": {
+      "post": {
+        "summary": "Reject user",
+        "parameters": [ { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Rejected" } }
+      }
+    },
+    "/auth/users/{userId}/suspend": {
+      "post": {
+        "summary": "Suspend user",
+        "parameters": [ { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Suspended" } }
+      }
+    },
+    "/auth/users/{userId}/activate": {
+      "post": {
+        "summary": "Activate user",
+        "parameters": [ { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Activated" } }
+      }
+    },
+    "/auth/users/{userId}": {
+      "get": {
+        "summary": "Get user",
+        "parameters": [ { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "User details" } }
+      }
+    }
+  }
+}

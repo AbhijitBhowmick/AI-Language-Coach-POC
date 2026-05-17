@@ -1,0 +1,142 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Community Service API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/community/communities": {
+      "post": {
+        "summary": "Create Community",
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Community created" } }
+      },
+      "get": {
+        "summary": "Get Communities",
+        "responses": { "200": { "description": "Communities listed" } }
+      }
+    },
+    "/community/communities/{id}": {
+      "get": {
+        "summary": "Get Community",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Community detail" } }
+      },
+      "delete": {
+        "summary": "Delete Community",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "204": { "description": "Community deleted" } }
+      }
+    },
+    "/community/communities/{id}/join": {
+      "post": {
+        "summary": "Join Community",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Joined" } }
+      }
+    },
+    "/community/communities/{id}/leave": {
+      "post": {
+        "summary": "Leave Community",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "204": { "description": "Left" } }
+      }
+    },
+    "/community/communities/{id}/members/{userId}/block": {
+      "post": {
+        "summary": "Block Member",
+        "parameters": [ 
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "Blocked" } }
+      }
+    },
+    "/community/communities/{id}/members/{userId}/unblock": {
+      "post": {
+        "summary": "Unblock Member",
+        "parameters": [ 
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "Unblocked" } }
+      }
+    },
+    "/community/communities/{id}/members/{userId}/promote": {
+      "post": {
+        "summary": "Promote Member",
+        "parameters": [ 
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "userId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "Promoted" } }
+      }
+    },
+    "/community/communities/{id}/members": {
+      "get": {
+        "summary": "Get Members",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Members" } }
+      }
+    },
+    "/community/communities/{id}/posts": {
+      "post": {
+        "summary": "Create Post",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Post created" } }
+      },
+      "get": {
+        "summary": "Get Posts",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Posts" } }
+      }
+    },
+    "/community/posts/{id}": {
+      "delete": {
+        "summary": "Delete Post",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "204": { "description": "Post deleted" } }
+      }
+    },
+    "/community/posts/{id}/like": {
+      "post": {
+        "summary": "Like Post",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Post liked" } }
+      }
+    },
+    "/community/posts/{id}/comments": {
+      "post": {
+        "summary": "Add Comment",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Comment added" } }
+      },
+      "get": {
+        "summary": "Get Comments",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Comments" } }
+      }
+    },
+    "/community/leaderboard": {
+      "get": {
+        "summary": "Get Global Leaderboard",
+        "responses": { "200": { "description": "Leaderboard" } }
+      }
+    },
+    "/community/communities/{id}/leaderboard": {
+      "get": {
+        "summary": "Get Community Leaderboard",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Leaderboard" } }
+      }
+    },
+    "/community/status": {
+      "get": {
+        "summary": "Service Status",
+        "responses": { "200": { "description": "Status" } }
+      }
+    }
+  }
+}

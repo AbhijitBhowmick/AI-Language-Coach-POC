@@ -1,0 +1,39 @@
+services:
+  infra-ai-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${COMPOSE_PROJECT_NAME:-ai-platform}-infra-ai-engine
+    hostname: infra-ai-engine
+    ports:
+      - "${INFRA_AI_ENGINE_PORT:-8000}:8000"
+    environment:
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - VALKEY_HOST=valkey
+      - VALKEY_PORT=6379
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - USE_MOCK=${USE_MOCK:-false}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    env_file:
+      - .env
+    networks:
+      - platform-net
+    depends_on:
+      qdrant:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
+    volumes:
+      - ./src:/app/src:ro
+      - infra_ai_engine_cache:/tmp/infra-ai-engine
+
+volumes:
+  infra_ai_engine_cache:

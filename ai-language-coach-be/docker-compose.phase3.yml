@@ -1,0 +1,145 @@
+version: '3.8'
+
+# AI-Language-Coach Phase 3 - Local Development Stack
+# Run with: docker-compose -f docker-compose.phase3.yml up
+
+services:
+  # PostgreSQL (Database)
+  postgres:
+    image: postgres:16-alpine
+    container_name: language-coach-db
+    environment:
+      POSTGRES_DB: language_coach
+      POSTGRES_USER: infra_admin
+      POSTGRES_PASSWORD: Test@1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U infra_admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  # Valkey (Cache/Session)
+  valkey:
+    image: valkey/valkey:latest
+    container_name: language-coach-cache
+    command: valkey-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - valkey_data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  # Qdrant (Vector Database)
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: language-coach-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__GRPC_PORT=6334
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # Java Backend (Spring Boot)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: language-coach-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: language_coach
+      DB_USER: infra_admin
+      DB_PASS: Test@1234
+      DB_POOL_MIN: 5
+      DB_POOL_MAX: 20
+      VALKEY_HOST: valkey
+      VALKEY_PORT: 6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend (Next.js)
+  frontend:
+    build:
+      context: ../ai-language-coach-phase2/ai-universal-rag-engine-fe
+      dockerfile: Dockerfile
+    container_name: language-coach-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_JAVA_API_URL: http://app:8080/api/v1
+      NEXT_PUBLIC_RAG_API_URL: http://rag-engine:8000
+    depends_on:
+      - app
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # RAG Engine (Python/FastAPI)
+  rag-engine:
+    build:
+      context: ../ai-language-coach-phase2/ai-universal-rag-engine-be
+      dockerfile: Dockerfile
+    container_name: language-coach-rag
+    ports:
+      - "8000:8000"
+    environment:
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: 6333
+      VALKEY_HOST: valkey
+      VALKEY_PORT: 6379
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-demo}
+    depends_on:
+      - qdrant
+      - valkey
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+volumes:
+  postgres_data:
+  valkey_data:
+  qdrant_data:
+
+# Scaling (for production):
+# docker-compose -f docker-compose.phase3.yml up --scale app=3 --scale rag-engine=2

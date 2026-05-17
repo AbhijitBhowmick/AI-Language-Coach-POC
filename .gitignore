@@ -1,0 +1,26 @@
+# Environment files (contain secrets)
+.env*
+!.env.example
+
+# Documentation
+docs/
+
+# Password/secret patterns
+*password*
+*secret*
+*.pem
+
+# Compiled files
+*.class
+
+# IDE & OS
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
